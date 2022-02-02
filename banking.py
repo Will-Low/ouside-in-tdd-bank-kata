@@ -43,11 +43,27 @@ class StatementPrinter:
     _STATEMENT_HEADER: str = "DATE | AMOUNT | BALANCE"
 
     def __init__(self, console: Console):
-        self._console = console
+        self._console: Console = console
 
     def print(self, transactions: List[Transaction]):
         self._console.print_line(self._STATEMENT_HEADER)
-        self._console.print_line()
+
+        # TODO - clean me up!
+        sort_by_date(transactions)
+        running_balance = 0
+        new_transactions = []
+        for t in transactions:
+            running_balance += t.amount
+            new_transactions.append((t.date, t.amount, running_balance))
+
+        new_transactions.reverse()
+        for t in new_transactions:
+            self._console.print_line(f"{t[0]} | {t[1]:.2f} | {t[2]:.2f}")
+
+
+def sort_by_date(transactions: List[Transaction]):
+    transactions.sort(key=lambda t: datetime.datetime.strptime(t.date, "%d/%m/%Y"))
+
 
 
 # Not allowed to add any more public methods

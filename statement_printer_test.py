@@ -14,7 +14,7 @@ class StatementPrinterTest(unittest.TestCase):
     def test_always_print_the_header(self):
         statement_printer: StatementPrinter = StatementPrinter(self._console)
         statement_printer.print(self._NO_TRANSACTIONS)
-        self._console.print_line.assert_called_once_with(self._STATEMENT_HEADER)
+        self._console.print_line.assert_called_with(self._STATEMENT_HEADER)
 
 
     def test_print_transactions_in_reverse_chronological_order(self):
