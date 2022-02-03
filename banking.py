@@ -17,10 +17,9 @@ class Clock:
 
 
 class TransactionRepository:
-    _transactions: List[Transaction] = []
-
     def __init__(self, clock: Clock):
         self._clock = clock
+        self._transactions: List[Transaction] = []
 
     def add_deposit(self, amount: int):
         self._transactions.append(Transaction(self._clock.today_as_string(), amount))
@@ -48,25 +47,31 @@ class StatementPrinter:
     def print(self, transactions: List[Transaction]):
         self._console.print_line(self._STATEMENT_HEADER)
 
-        # TODO - clean me up!
-        sort_by_date(transactions)
-        running_balance = 0
-        new_transactions = []
-        for t in transactions:
-            running_balance += t.amount
-            new_transactions.append((t.date, t.amount, running_balance))
+        prep_for_running_balance_calculation(transactions)
 
-        new_transactions.reverse()
-        for t in new_transactions:
-            self._console.print_line(f"{t[0]} | {t[1]:.2f} | {t[2]:.2f}")
+        transactions_with_running_balance = tie_transaction_to_running_balance(transactions)
+
+        order_transactions_for_statement_printing(transactions_with_running_balance)
+
+        for t in transactions_with_running_balance:
+            self._console.print_line(f"{t[0].date} | {t[0].amount:.2f} | {t[1]:.2f}")
 
 
-def sort_by_date(transactions: List[Transaction]):
+def prep_for_running_balance_calculation(transactions: List[Transaction]):
     transactions.sort(key=lambda t: datetime.datetime.strptime(t.date, "%d/%m/%Y"))
 
+def tie_transaction_to_running_balance(transactions: List[Transaction]):
+    running_balance = 0
+    transactions_with_running_balance = []
+    for t in transactions:
+        running_balance += t.amount
+        transactions_with_running_balance.append((t, running_balance))
+    return transactions_with_running_balance
 
+def order_transactions_for_statement_printing(transactions: List[Transaction]):
+    transactions.reverse()
 
-# Not allowed to add any more public methods
+# Per kata rules, adjusting public methods is not allowed
 class Account:
     def __init__(
         self,

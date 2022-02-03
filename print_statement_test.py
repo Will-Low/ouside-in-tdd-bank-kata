@@ -6,7 +6,6 @@ from banking import (
     Console,
     TransactionRepository,
     StatementPrinter,
-    Transaction,
     Clock,
 )
 

@@ -8,7 +8,7 @@ class ClockShould(unittest.TestCase):
     class TestableClock(Clock):
         _today = datetime.date.fromisoformat("2015-04-24")
 
-    def test_todays_date_in_dd_MM_yyyy_format(self):
+    def test_todays_date_in_dd_mm_yyyy_format(self):
         clock = self.TestableClock()
         date = clock.today_as_string()
         self.assertEqual(date, "24/04/2015")

@@ -1,20 +1,22 @@
 import unittest
-from unittest.mock import Mock, call
+from unittest.mock import Mock
 
 from banking import (
     Account,
     Console,
     TransactionRepository,
     StatementPrinter,
-    Transaction,
+    Clock,
 )
 
 
 class AccountShould(unittest.TestCase):
-    _transaction_repository: TransactionRepository = TransactionRepository()
+    _clock: Clock = Clock()
+    _transaction_repository: TransactionRepository = TransactionRepository(_clock)
     _transaction_repository.add_deposit: Mock = Mock()
     _transaction_repository.add_withdrawal: Mock = Mock()
-    _statement_printer: StatementPrinter = StatementPrinter()
+    _console: Console = Console()
+    _statement_printer: StatementPrinter = StatementPrinter(_console)
     _statement_printer.print: Mock = Mock()
 
     _account = Account(_transaction_repository, _statement_printer)
